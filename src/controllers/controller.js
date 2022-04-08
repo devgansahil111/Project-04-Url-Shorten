@@ -2,12 +2,11 @@
 // Require Packages
 
 
-const mongoose = require("mongoose");
 const shortid = require("shortid");
-const validUrl = require("valid-url");
 const model = require("../models/model");
-const urlReg = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/
 const redis = require("redis");
+const { promisify } = require("util");
+
 
 
 // ---------------------------------------------------------------------------------------- //
@@ -25,7 +24,6 @@ const isValid = function (value) {
 // Redis
 
 
-const { promisify } = require("util");
 
 //Connect to redis
 const redisClient = redis.createClient(
@@ -58,7 +56,7 @@ const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 const createShortUrl = async function (req, res) {
     try {
         let data = req.body;
-        let { longUrl } = data;
+        let { longUrl } = data; // destructure
 
         if (!isValid(data)) {
             res.status(400).send({ status: false, msg: "Please provide input via body" })
@@ -68,8 +66,8 @@ const createShortUrl = async function (req, res) {
             res.status(400).send({ status: false, msg: "Please provide long url" })
             return
         }
-        if (!(urlReg.test(longUrl.trim()))) {
-            res.status(404).send({ status: false, msg: "Invalid Url" })
+        if (!(/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/.test(longUrl.trim()))) {
+            res.status(400).send({ status: false, msg: "Invalid Url" })
             return
         }
         data["urlCode"] = shortid.generate().toLowerCase()
@@ -100,7 +98,7 @@ const getOriginalUrl = async function (req, res) {
         const urlCode = req.params.urlCode
 
         if (!isValid(urlCode)) {
-            res.status(400).send({ status: false, msg: "please provide urlcode" })
+            res.status(400).send({ status: false, msg: "Please provide urlcode" })
             return
         }
 
