@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------------------- //
 // Require Packages
 
-// const urlModel = require("../models/model");
+
 const mongoose = require("mongoose");
 const shortid = require("shortid");
 const validUrl = require("valid-url");
@@ -81,6 +81,7 @@ const createShortUrl = async function (req, res) {
             return
         }
         const SavedUrl = await model.create(data)
+        await SET_ASYNC(`${data.urlCode}`, JSON.stringify(data.longUrl))
         res.status(201).send({ status: true, data: { "longUrl": SavedUrl.longUrl, "shortUrl": SavedUrl.shortUrl, "urlCode": SavedUrl.urlCode } })
         return
 
@@ -97,21 +98,29 @@ const createShortUrl = async function (req, res) {
 const getOriginalUrl = async function (req, res) {
     try {
         const urlCode = req.params.urlCode
+
         if (!isValid(urlCode)) {
-            res.status(400).send({ status: false, msg: "Please provide urlcode" })
+            res.status(400).send({ status: false, msg: "please provide urlcode" })
             return
         }
+
         const cahcedOrginalUrl = await GET_ASYNC(`${urlCode}`)
         if (isValid(cahcedOrginalUrl)) {
-            res.status(302).redirect(cahcedOrginalUrl.longUrl)
+
+            let redirectingData = JSON.parse(cahcedOrginalUrl)
+
+            res.status(302).redirect(redirectingData)
             return
+
         } else {
+
             const urlData = await model.findOne({ urlCode: urlCode })
             if (!isValid(urlData)) {
                 res.status(404).send({ status: false, msg: "url not found" })
                 return
             }
-            await SET_ASYNC(`${urlCode}`, JSON.stringify(urlData))
+
+            await SET_ASYNC(`${urlCode}`, JSON.stringify(urlData.longUrl))
             res.status(302).redirect(urlData.longUrl)
             return
         }
@@ -120,6 +129,7 @@ const getOriginalUrl = async function (req, res) {
         return
     }
 };
+
 
 
 // ---------------------------------------------------------------------------------------- //

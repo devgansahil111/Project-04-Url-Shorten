@@ -68,3 +68,50 @@ Url shorten response
     "urlCode": "ghfgfg"
   } 
 }
+
+
+
+#### Date - 07-04-2022 | TA Session
+#### Git Commands
+1. git init
+2. git clone
+3. git uranium / thorium
+4. git branch -a
+5. git checkout
+6. git checkout -b
+7. git add .
+8. git commit
+9. git push
+10. git add .
+11. git commit -m
+12. git push
+13. git status
+
+#### Terminal Commands
+1. change directory - cd
+2. list directory - ls
+3. open file - open filename
+4. copy - cp (file name) (new file name}
+5. move - mv (file name) (path where to move)
+6. create a file - touch filename.txt
+7. new folder - mkdir name
+8. remove - rmdir name
+9. remove nested folder - rm -R name
+10. list activity running on computer - top
+11. clear - cls
+12. cat - cat >> filename
+13. git history
+
+#### npm commands (node package manager)
+1. npm i
+2. npm i -g
+3. npm un
+4. npm t
+5. npm ls
+6. npm init
+7. npm restart
+8. npm update
+9. npm version
+
+#### module.exports 
+- The module.exports is a special object which is included in every JavaScript file in the Node.js application by default. The module is a variable that represents the current module, and exports is an object that will be exposed as a module. So, whatever you assign to module.exports will be exposed as a module.
