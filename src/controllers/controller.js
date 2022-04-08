@@ -68,7 +68,7 @@ const createShortUrl = async function (req, res) {
             res.status(400).send({ status: false, msg: "Please provide long url" })
             return
         }
-        if (!isValid(urlReg.test(longUrl.trim()))) {
+        if (!(urlReg.test(longUrl.trim()))) {
             res.status(404).send({ status: false, msg: "Invalid Url" })
             return
         }
